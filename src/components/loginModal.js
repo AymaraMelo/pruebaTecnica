@@ -20,7 +20,6 @@ function LoginModal({ ...props }) {
     };
     loginUser(infoUser).then((response) => {
       localStorage.setItem('userToken', response.data.token);
-      //Preguntar
       props.setUserLogin(infoUser);
       navigate('/home', { replace: true });
     });

@@ -3,7 +3,7 @@ import { Button, Form, InputGroup, FormControl } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getUserAccounts } from '../API/lib/users';
 
-export default function TransactionForm() {
+export default function TransactionForm({ handleSubmit }) {
   const [userAccounts, setUserAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [selectedType, setSelectedType] = useState('');
@@ -59,8 +59,12 @@ export default function TransactionForm() {
           <FormControl type="text" maxLength="128" />
         </InputGroup>
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
+      <Button
+        style={{ textAlign: 'center', float: 'right', width: '15%' }}
+        variant="primary"
+        type="submit"
+      >
+        Confirmar
       </Button>
     </Form>
   );
