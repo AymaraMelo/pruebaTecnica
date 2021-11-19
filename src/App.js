@@ -1,8 +1,8 @@
 import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginModal from './components/loginModal';
-import Home from './Home';
-import NewTransaction from './NewTransaction';
+import LoginModal from './components/LoginModal';
+import Home from './views/Home';
+import NewTransaction from './views/NewTransaction';
 
 function App() {
   return (

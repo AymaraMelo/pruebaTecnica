@@ -1,15 +1,15 @@
 import axiosClient from '../apiClient';
 
-export function loginUser(infoUser){
-    return axiosClient.post('/users/login', infoUser);
+export async function loginUser(infoUser) {
+  return await axiosClient.post('/users/login', infoUser);
 }
 
-export function getUserAccounts(userToken){
-    return axiosClient({
-        method: 'GET',
-        url: '/accounts',
-        headers: { 
-            'Authorization' : `Bearer ${userToken}`
-        },
-    });
+export function getUserAccounts(userToken) {
+  return axiosClient({
+    method: 'GET',
+    url: '/accounts',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    },
+  });
 }

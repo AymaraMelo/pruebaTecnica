@@ -1,28 +1,32 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal, Form } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser } from '../redux/auth/authActions';
 import { useNavigate } from 'react-router';
-import { connect } from 'react-redux';
-import * as userActions from '../redux/actions/userActions';
-import PropTypes from 'prop-types';
 
-import { loginUser } from '../API/lib/users';
-
-function LoginModal({ ...props }) {
+export default function LoginModal({ ...props }) {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.authReducer.error);
+  const loading = useSelector((state) => state.authReducer.loading);
+  const user = useSelector((state) => state.authReducer.user);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/home', { replace: true });
+    }
+  }, [error, user]);
 
   const handleSubmit = () => {
     const infoUser = {
       email: email,
       password: password,
     };
-    loginUser(infoUser).then((response) => {
-      localStorage.setItem('userToken', response.data.token);
-      props.setUserLogin(infoUser);
-      navigate('/home', { replace: true });
-    });
+
+    dispatch(loginUser(infoUser));
   };
 
   return (
@@ -55,7 +59,13 @@ function LoginModal({ ...props }) {
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Button style={{ margin: '5%' }} onClick={handleSubmit} variant="primary">
+        {error && error.map((e) => <p style={style.error}>{e}</p>)}
+        <Button
+          style={{ margin: '5%' }}
+          onClick={handleSubmit}
+          variant="primary"
+          disabled={loading}
+        >
           Iniciar Sesión
         </Button>
       </Modal>
@@ -63,19 +73,10 @@ function LoginModal({ ...props }) {
   );
 }
 
-//Preguntar
-function mapStateToProps(state) {
-  return {
-    user: state,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    setUserLogin: (user) => {
-      dispatch(loginUser(user));
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);
+const style = {
+  error: {
+    textAlign: 'center',
+    color: 'red',
+    margin: 0,
+  },
+};
