@@ -1,4 +1,4 @@
-const initialState = {
+export default {
   userAccounts: null,
   loading: false,
   error: false,

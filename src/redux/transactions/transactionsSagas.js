@@ -9,6 +9,7 @@ function* createTransactionSaga(data) {
     if (response.status === 'OK') {
       yield put({
         type: types.USER_CREATE_TRANSACTION_SUCCESS,
+        createdTransaction: response.result.data,
       });
     } else {
       yield put({ type: types.USER_CREATE_TRANSACTION_FAILURE, error: response });
@@ -20,11 +21,12 @@ function* createTransactionSaga(data) {
 
 function* getTransactionSaga(data) {
   try {
-    const response = yield apiGetTransaction(data.userToken);
+    const response = yield apiGetTransaction(data.userToken, data.params);
     if (response.status === 'OK') {
       yield put({
         type: types.USER_GET_TRANSACTION_SUCCESS,
         userTransactions: response.result.data,
+        pagination: response.result.pagination,
       });
     } else {
       yield put({ type: types.USER_GET_TRANSACTION_FAILURE, error: response });

@@ -11,14 +11,11 @@ export default function NewTransaction() {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.transactionsReducer.loading);
   const error = useSelector((state) => state.transactionsReducer.error);
+  const createdTransaction = useSelector((state) => state.transactionsReducer.createdTransaction);
 
-  console.log(loading);
-
-  const handleSubmit = (event, newTransaction) => {
-    event.preventDefault();
+  const handleSubmit = (newTransaction) => {
     setShowComprobante(false);
     const userToken = localStorage.getItem('userToken');
-    //console.log(newTransaction);
     dispatch(createTransaction(userToken, newTransaction));
   };
 
@@ -30,11 +27,11 @@ export default function NewTransaction() {
         id="noanim-tab-example"
         className="mb-3"
       >
-        <Tab eventKey="Ingreso de datos" title="Ingreso de datos">
+        <Tab eventKey="Ingreso de datos" title="Ingreso de datos" disabled={!showComprobante}>
           <TransactionForm handleSubmit={handleSubmit} />
         </Tab>
         <Tab eventKey="Comprobante" title="Comprobante" disabled={showComprobante}>
-          <ConfirmForm error={error} />
+          <ConfirmForm error={error} infoTransaction={createdTransaction} />
         </Tab>
       </Tabs>
     </Container>

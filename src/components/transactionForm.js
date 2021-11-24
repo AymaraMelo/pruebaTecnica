@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useReducer } from 'react';
-import { Button, Form, InputGroup, FormControl, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup, FormControl, Spinner, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAccounts } from '../redux/user/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function TransactionForm({ handleSubmit }) {
+  useEffect(() => {}, []);
+  const [show, setShow] = useState(false);
+
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [references, setReferences] = useState('');
   const dispatchRedux = useDispatch();
@@ -20,6 +23,19 @@ export default function TransactionForm({ handleSubmit }) {
   };
 
   const [transactionState, dispatch] = useReducer(reducer, initialState);
+
+  const handleClose = () => setShow(false);
+  const handleConfirm = () => {
+    handleSubmit({
+      description: references,
+      account_from: parseInt(selectedAccount),
+      account_to: parseInt(transactionState.destinationAccount),
+      amount: parseInt(transactionState.amount),
+      currency_name: transactionState.transactionCurrency,
+    });
+    setShow(false);
+  };
+  const handleShow = () => setShow(true);
 
   function reducer(transactionState, action) {
     switch (action.type) {
@@ -45,24 +61,17 @@ export default function TransactionForm({ handleSubmit }) {
     error.map((e) => <p style={style.error}>{e}</p>)
   ) : (
     <Form
-      onSubmit={(event) =>
-        handleSubmit(event, {
-          // description: 'lorem ipsum',
-          // account_from: 1,
-          // account_to: 2,
-          // amount: 1,
-          // currency_name: 'EU',
-          description: references,
-          account_from: selectedAccount,
-          account_to: transactionState.destinationAccount,
-          amount: transactionState.amount,
-          currency_name: transactionState.transactionCurrency,
-        })
-      }
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleShow();
+      }}
     >
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Cuenta de origen</Form.Label>
         <Form.Select required onChange={(event) => setSelectedAccount(event.target.value)}>
+          <option key={'default'} value={null}>
+            Seleccione una cuenta ...
+          </option>
           {userAccounts &&
             userAccounts.map((account) => (
               <option key={account.id} value={account.id}>
@@ -80,7 +89,13 @@ export default function TransactionForm({ handleSubmit }) {
             dispatch({ type: 'set_transactionCurrency', value: event.target.value })
           }
         >
-          <option value="URU">$URU (Pesos Uruguayos)</option>
+          {' '}
+          <option key={'default'} value={null}>
+            Seleccione un tipo de moneda ...
+          </option>
+          <option value="URU" defaultValue>
+            $URU (Pesos Uruguayos)
+          </option>
           <option value="USD">U$S (Dólares Américanos)</option>
           <option value="EU">EUR (Euros)</option>
         </Form.Select>
@@ -121,11 +136,25 @@ export default function TransactionForm({ handleSubmit }) {
       </Form.Group>
       <Button
         type="submit"
-        style={{ textAlign: 'center', float: 'right', width: '15%' }}
+        style={{ textAlign: 'center', float: 'right', width: '15%', marginBottom: '5%' }}
         variant="primary"
       >
         Confirmar
       </Button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Desea realizar la transferencia?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            No
+          </Button>
+          <Button variant="primary" onClick={() => handleConfirm()}>
+            Si
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Form>
   );
 }
