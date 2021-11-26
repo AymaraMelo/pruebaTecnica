@@ -60,87 +60,96 @@ export default function TransactionForm({ handleSubmit }) {
   ) : error ? (
     error.map((e) => <p style={style.error}>{e}</p>)
   ) : (
-    <Form
-      onSubmit={(event) => {
-        event.preventDefault();
-        handleShow();
-      }}
-    >
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Cuenta de origen</Form.Label>
-        <Form.Select required onChange={(event) => setSelectedAccount(event.target.value)}>
-          <option key={'default'} value={null}>
-            Seleccione una cuenta ...
-          </option>
-          {userAccounts &&
-            userAccounts.map((account) => (
-              <option key={account.id} value={account.id}>
-                Cuenta {account.id} (Saldo {account.currency.name} {account.balance})
-              </option>
-            ))}
-        </Form.Select>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Moneda de la transacción</Form.Label>
-        <Form.Select
-          required
-          value={transactionState.transactionCurrency}
-          onChange={(event) =>
-            dispatch({ type: 'set_transactionCurrency', value: event.target.value })
-          }
-        >
-          {' '}
-          <option key={'default'} value={null}>
-            Seleccione un tipo de moneda ...
-          </option>
-          <option value="URU" defaultValue>
-            $URU (Pesos Uruguayos)
-          </option>
-          <option value="USD">U$S (Dólares Américanos)</option>
-          <option value="EU">EUR (Euros)</option>
-        </Form.Select>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Importe a transferir</Form.Label>
-        <InputGroup className="mb-3">
-          <InputGroup.Text>{transactionState.transactionCurrency}</InputGroup.Text>
+    <>
+      <Form
+        style={{ padding: '3%', marginBottom: '5%' }}
+        className="border border-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleShow();
+        }}
+      >
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Cuenta de origen</Form.Label>
+          <Form.Select required onChange={(event) => setSelectedAccount(event.target.value)}>
+            <option key={'default'} value={null}>
+              Seleccione una cuenta ...
+            </option>
+            {userAccounts &&
+              userAccounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  Cuenta {account.id} (Saldo {account.currency.name} {account.balance})
+                </option>
+              ))}
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Moneda de la transacción</Form.Label>
+          <Form.Select
+            required
+            value={transactionState.transactionCurrency}
+            onChange={(event) =>
+              dispatch({ type: 'set_transactionCurrency', value: event.target.value })
+            }
+          >
+            {' '}
+            <option key={'default'} value={null}>
+              Seleccione un tipo de moneda ...
+            </option>
+            <option value="URU" defaultValue>
+              $URU (Pesos Uruguayos)
+            </option>
+            <option value="USD">U$S (Dólares Américanos)</option>
+            <option value="EU">EUR (Euros)</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label>Importe a transferir</Form.Label>
+          <InputGroup className="mb-3">
+            <InputGroup.Text>{transactionState.transactionCurrency}</InputGroup.Text>
+            <FormControl
+              type="number"
+              required
+              value={transactionState.amount}
+              onChange={(event) => dispatch({ type: 'set_amount', value: event.target.value })}
+            />
+          </InputGroup>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label>Cuenta destino</Form.Label>
           <FormControl
             type="number"
             required
-            value={transactionState.amount}
-            onChange={(event) => dispatch({ type: 'set_amount', value: event.target.value })}
+            value={transactionState.destinationAccount}
+            onChange={(event) =>
+              dispatch({ type: 'set_destinationAccount', value: event.target.value })
+            }
           />
-        </InputGroup>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Cuenta destino</Form.Label>
-        <FormControl
-          type="number"
-          required
-          value={transactionState.destinationAccount}
-          onChange={(event) =>
-            dispatch({ type: 'set_destinationAccount', value: event.target.value })
-          }
-        />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Referencia</Form.Label>
-        <InputGroup className="mb-3">
-          <FormControl
-            type="text"
-            maxLength="128"
-            value={references}
-            onChange={(event) => setReferences(event.target.value)}
-          />
-        </InputGroup>
-      </Form.Group>
-      <Button
-        type="submit"
-        style={{ textAlign: 'center', float: 'right', width: '15%', marginBottom: '5%' }}
-        variant="primary"
-      >
-        Confirmar
-      </Button>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label>Referencia</Form.Label>
+          <InputGroup className="mb-3">
+            <FormControl
+              type="text"
+              maxLength="128"
+              value={references}
+              onChange={(event) => setReferences(event.target.value)}
+            />
+          </InputGroup>
+        </Form.Group>
+        <Button
+          type="submit"
+          style={{
+            textAlign: 'center',
+            width: '15%',
+            marginTop: '3%',
+            marginBottom: '0%',
+          }}
+          variant="primary"
+        >
+          Confirmar
+        </Button>
+      </Form>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmación</Modal.Title>
@@ -155,7 +164,7 @@ export default function TransactionForm({ handleSubmit }) {
           </Button>
         </Modal.Footer>
       </Modal>
-    </Form>
+    </>
   );
 }
 

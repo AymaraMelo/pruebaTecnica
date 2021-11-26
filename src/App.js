@@ -3,14 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginModal from './components/LoginModal';
 import Home from './views/Home';
 import NewTransaction from './views/NewTransaction';
-import NavBar from './components/NavBar';
-import { useDispatch } from 'react-redux';
-import { loginUser } from './redux/auth/authActions';
+import Header from './components/Header';
 
 function App() {
   return (
     <>
-      <NavBar></NavBar>
+      <Header></Header>
       <Routes>
         {/* Public */}
         <Route exact path="/" element={<LoginModal />} />

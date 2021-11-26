@@ -25,7 +25,7 @@ export default function NewTransaction() {
         defaultActiveKey="Ingreso de datos"
         transition={false}
         id="noanim-tab-example"
-        className="mb-3"
+        className="mb-3 "
       >
         <Tab eventKey="Ingreso de datos" title="Ingreso de datos" disabled={!showComprobante}>
           <TransactionForm handleSubmit={handleSubmit} />

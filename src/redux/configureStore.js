@@ -11,13 +11,13 @@ const sagaMiddleware = createSagaMiddleware();
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  rootReducer(),
+  rootReducer,
   composeEnhancers(applyMiddleware(sagaMiddleware, reduxImmutableStateInvariant())),
 );
 
 initSagas(store, sagaMiddleware);
 
-const userData = localStorage.getItem('userData');
-if (userData) store.dispatch(getUser(JSON.parse(userData)));
+const userToken = localStorage.getItem('userToken');
+if (userToken) store.dispatch(getUser(userToken));
 
 export default store;
