@@ -1,4 +1,4 @@
-import axiosClient from '../apiClient';
+import axiosClient from './apiClient';
 
 export async function loginUser(infoUser) {
   return await axiosClient.post('/users/login', infoUser);

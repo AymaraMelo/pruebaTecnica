@@ -1,5 +1,5 @@
-import axiosClient from '../apiClient';
-import { parseParams } from '../../utils/api';
+import axiosClient from './apiClient';
+import { parseParams } from '../utils/api';
 
 export async function getTransactions(userToken, params) {
   return await axiosClient({

@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
-import { setTransaction as apiCreateTransaction } from '../../api/lib/transactions';
-import { getTransactions as apiGetTransaction } from '../../api/lib/transactions';
+import { setTransaction as apiCreateTransaction } from '../../api/transactions';
+import { getTransactions as apiGetTransaction } from '../../api/transactions';
 import { put, all, takeLatest } from 'redux-saga/effects';
 
 function* createTransactionSaga(data) {

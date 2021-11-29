@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
-import { loginUser as apiLoginUser } from '../../api/lib/users';
-import { getUser as apiGetUser } from '../../api/lib/users';
+import { loginUser as apiLoginUser } from '../../api/users';
+import { getUser as apiGetUser } from '../../api/users';
 import { put, all, takeLatest } from 'redux-saga/effects';
 
 function* loginUserSaga(data) {
@@ -18,7 +18,6 @@ function* loginUserSaga(data) {
 }
 
 function* logoutSaga() {
-  // localStorage.removeItem('userToken');
   yield put({ type: types.USER_LOG_OUT_SUCCESS });
 }
 

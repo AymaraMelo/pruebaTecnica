@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import { getUserAccounts as apigetAccounts } from '../../api/lib/users';
+import { getUserAccounts as apigetAccounts } from '../../api/users';
 import { put, all, takeLatest } from 'redux-saga/effects';
 
 function* getAccountsSaga(data) {
