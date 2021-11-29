@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState, useReducer, useRef } from 'react';
+import React, { useMemo, useEffect, useState, useReducer } from 'react';
 import { Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from 'styled-components';
@@ -10,16 +10,15 @@ import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight } from
 import { GrDescend, GrAscend } from 'react-icons/gr';
 import * as constants from '../utils/constants';
 
-export default function TransactionTable() {
-  useEffect(() => {});
+import DateTimePicker from 'react-datetime-picker';
 
+export default function TransactionTable() {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.transactionsReducer.loading);
   const error = useSelector((state) => state.transactionsReducer.error);
   const transactions = useSelector((state) => state.transactionsReducer.userTransactions);
   const pagination = useSelector((state) => state.transactionsReducer.pagination);
-  const [back, setBack] = useState(false);
-  const initialLoadFinished = useRef(false);
+  const [transactionDate, setTransactionDate] = useState(new Date());
 
   const [tableState, dispatchTable] = useReducer(
     (state, action) => {
@@ -28,6 +27,31 @@ export default function TransactionTable() {
           return {
             ...state,
             sortBy: action.value,
+          };
+        case 'index':
+          return {
+            ...state,
+            pageIndex: action.value,
+          };
+        case 'size':
+          return {
+            ...state,
+            pageSize: action.value,
+          };
+        case 'date':
+          return {
+            ...state,
+            from: action.value,
+          };
+        case 'from_account_id':
+          return {
+            ...state,
+            from_account_id: action.value,
+          };
+        case 'to_account_id':
+          return {
+            ...state,
+            to_account_id: action.value,
           };
         default:
           return state;
@@ -39,6 +63,9 @@ export default function TransactionTable() {
       pageIndex: parseInt(pagination.currentPage),
       pageSize: pagination.pageSize,
       sortBy: constants.DEFAULT_SORT_BY,
+      from: transactionDate,
+      from_account_id: constants.DEFAULT_FROM_ACCOUNT_ID,
+      to_account_id: constants.DEFAULT_TO_ACCOUNT_ID,
     },
   );
 
@@ -74,7 +101,7 @@ export default function TransactionTable() {
     [],
   );
 
-  const defaultColumn = React.useMemo(
+  const defaultColumn = useMemo(
     () => ({
       Filter: DefaultColumnFilter,
     }),
@@ -86,16 +113,46 @@ export default function TransactionTable() {
       {
         id: 'from_account_id',
         Header: 'Origen',
-        accessor: (d) => d.from_account_id,
+        accessor: (d) => {
+          return d.from_account_id;
+        },
         sortType: 'basic',
+        Filter: () => {
+          return (
+            <>
+              <input
+                onChange={(event) =>
+                  dispatchTable({ type: 'from_account_id', value: event.target.value })
+                }
+                defaultValue={tableState.from_account_id}
+                type="number"
+                min="1"
+              ></input>
+            </>
+          );
+        },
         Cell: (props) => {
-          return <div>{props.value}</div>;
+          return <>{props.value}</>;
         },
       },
       {
         Header: 'Destino',
         accessor: 'to_account_id',
         sortType: 'basic',
+        Filter: () => {
+          return (
+            <>
+              <input
+                onChange={(event) =>
+                  dispatchTable({ type: 'to_account_id', value: event.target.value })
+                }
+                defaultValue={tableState.to_account_id}
+                type="number"
+                min="1"
+              ></input>
+            </>
+          );
+        },
       },
       {
         Header: 'Moneda',
@@ -111,6 +168,25 @@ export default function TransactionTable() {
         Header: 'Fecha',
         accessor: 'createdAt',
         sortType: 'basic',
+        Cell: (props) => {
+          return <div>{props.value.split('T')[0] || ''}</div>;
+        },
+        Filter: () => {
+          return (
+            <DateTimePicker
+              // dayPlaceholder={''}
+              // hourPlaceholder={''}
+              // minutePlaceholder={''}
+              // monthPlaceholder={''}
+              // secondPlaceholder={''}
+              // yearPlaceholder={''}
+              defaultValue={transactionDate}
+              onChange={(value) => {
+                setTransactionDate(value);
+              }}
+            />
+          );
+        },
       },
     ],
     [],
@@ -147,72 +223,41 @@ export default function TransactionTable() {
   );
 
   useEffect(() => {
-    if (!initialLoadFinished.current) {
-      const userToken = localStorage.getItem('userToken');
-      dispatch(
-        getTransactions(userToken, {
-          pageIndex: pageIndex,
-          pageSize: pageSize,
-          sort_by: constants.DEFAULT_SORT_BY[0].id,
-          order_by: constants.DEFAULT_SORT_BY[0].desc ? 'desc' : 'asc',
-        }),
-      );
-    }
-  }, []);
+    const userToken = localStorage.getItem('userToken');
+    console.log('ACTUALIZA');
+    dispatch(
+      getTransactions(userToken, {
+        pageIndex: tableState.pageIndex,
+        pageSize: tableState.pageSize,
+        sort_by: tableState.sortBy[0].id,
+        order_by: tableState.sortBy[0].desc ? 'desc' : 'asc',
+        from: tableState.from.toISOString(),
+        from_account_id: tableState.from_account_id,
+        to_account_id: tableState.to_account_id,
+      }),
+    );
+  }, [tableState]);
 
   useEffect(() => {
-    if (initialLoadFinished.current) {
-      console.log('Volver: ', back);
-      const userToken = localStorage.getItem('userToken');
-      if (sortBy.length > 0 && !back) {
-        console.log('cambia orden');
-        const sort_by = sortBy[0].id;
-        const order_by = sortBy[0].desc ? 'desc' : 'asc';
-        console.log(sort_by, order_by);
-        dispatchTable({ type: 'sort', value: sortBy });
-        console.log(sortBy);
-        dispatch(
-          getTransactions(userToken, {
-            pageIndex: pageIndex,
-            pageSize: pageSize,
-            sort_by: sort_by,
-            order_by: order_by,
-          }),
-        );
-      } else if (!back) {
-        console.log('cambia Indice');
-        dispatchTable({ type: 'sort', value: sortBy });
-        dispatch(
-          getTransactions(userToken, {
-            pageIndex: pageIndex,
-            pageSize: pageSize,
-            sort_by: constants.DEFAULT_SORT_BY[0].id,
-            order_by: constants.DEFAULT_SORT_BY[0].desc ? 'desc' : 'asc',
-          }),
-        );
-      } else {
-        console.log('cambia Tamaño');
-        dispatchTable({ type: 'sort', value: sortBy });
-        const sort_by = sortBy[0].id;
-        const order_by = sortBy[0].desc ? 'desc' : 'asc';
-        setBack(false);
-        dispatch(
-          getTransactions(userToken, {
-            pageIndex: '0',
-            pageIndex: pageIndex,
-            pageSize: pageSize,
-            sort_by: sort_by,
-            order_by: order_by,
-          }),
-        );
-      }
+    if (sortBy.length > 0) {
+      dispatchTable({ type: 'sort', value: sortBy });
     }
-    initialLoadFinished.current = true;
-  }, [pageIndex, pageSize, sortBy]);
+  }, [sortBy]);
+
+  useEffect(() => {
+    dispatchTable({ type: 'size', value: pageSize });
+  }, [pageSize]);
+
+  useEffect(() => {
+    dispatchTable({ type: 'index', value: pageIndex });
+  }, [pageIndex]);
+
+  useEffect(() => {
+    dispatchTable({ type: 'date', value: transactionDate });
+  }, [transactionDate]);
 
   return (
     <>
-      {' '}
       <Styles>
         <table {...getTableProps()}>
           <thead>
@@ -260,6 +305,7 @@ export default function TransactionTable() {
           style={{
             backgroundColor: '#e6e6e6',
             marginTop: '2%',
+            flexDirection: 'row',
           }}
         >
           <FaAngleDoubleLeft
@@ -296,7 +342,6 @@ export default function TransactionTable() {
             value={pageSize}
             onChange={(event) => {
               setPageSize(Number(event.target.value));
-              setBack(true);
             }}
           >
             {[5, 10, 15, 20].map((pageSize) => (

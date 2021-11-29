@@ -9,6 +9,7 @@ export default function TransactionForm({ handleSubmit }) {
   const [show, setShow] = useState(false);
 
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [references, setReferences] = useState('');
   const dispatchRedux = useDispatch();
 
@@ -71,16 +72,25 @@ export default function TransactionForm({ handleSubmit }) {
       >
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Cuenta de origen</Form.Label>
-          <Form.Select required onChange={(event) => setSelectedAccount(event.target.value)}>
+          <Form.Select
+            required
+            onChange={(event) => {
+              setSelectedAccount(event.target.value);
+              console.log(event.target.value);
+            }}
+          >
             <option key={'default'} value={null}>
               Seleccione una cuenta ...
             </option>
             {userAccounts &&
-              userAccounts.map((account) => (
-                <option key={account.id} value={account.id}>
-                  Cuenta {account.id} (Saldo {account.currency.name} {account.balance})
-                </option>
-              ))}
+              userAccounts.map((account) => {
+                console.log(account);
+                return (
+                  <option key={account.id} value={account.id}>
+                    Cuenta {account.id} (Saldo {account.currency.name} {account.balance})
+                  </option>
+                );
+              })}
           </Form.Select>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
