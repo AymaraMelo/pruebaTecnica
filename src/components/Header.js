@@ -18,12 +18,12 @@ export default function Header() {
     <Navbar bg="primary" variant="dark">
       <Container>
         <Navbar.Brand>December Bank</Navbar.Brand>
-        <Link style={{ color: 'white' }} to="/home">
-          Home
-        </Link>
-        <Navbar.Collapse className="justify-content-end">
-          {user ? (
-            <>
+        {user ? (
+          <>
+            <Link style={{ color: 'white' }} to="/home">
+              Home
+            </Link>
+            <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>User: {user.name}</Navbar.Text>{' '}
               <BiLogOut
                 size="30"
@@ -31,9 +31,9 @@ export default function Header() {
                 style={{ marginLeft: '2%' }}
                 onClick={handleClick}
               />{' '}
-            </>
-          ) : null}
-        </Navbar.Collapse>
+            </Navbar.Collapse>
+          </>
+        ) : null}
       </Container>
     </Navbar>
   );

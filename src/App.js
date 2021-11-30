@@ -4,6 +4,7 @@ import LoginModal from './components/LoginModal';
 import Home from './views/Home';
 import NewTransaction from './views/NewTransaction';
 import Header from './components/Header';
+import Register from './views/Register';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         {/* Public */}
         <Route exact path="/" element={<LoginModal />} />
+        <Route path="/register" element={<Register />} />
         {/* Private */}
         <Route
           path="/home"

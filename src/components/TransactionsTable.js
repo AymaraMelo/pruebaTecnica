@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useReducer } from 'react';
+import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTransactions } from '../redux/transactions/transactionsActions';
@@ -14,6 +14,8 @@ export default function TransactionTable() {
   const error = useSelector((state) => state.transactionsReducer.error);
   const transactions = useSelector((state) => state.transactionsReducer.userTransactions);
   const pagination = useSelector((state) => state.transactionsReducer.pagination);
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1);
 
   const [tableState, dispatchTable] = useReducer(
     (state, action) => {
@@ -63,7 +65,7 @@ export default function TransactionTable() {
       pageIndex: parseInt(pagination.currentPage),
       pageSize: pagination.pageSize,
       sortBy: constants.DEFAULT_SORT_BY,
-      from: new Date(),
+      from: date,
       from_account_id: constants.DEFAULT_FROM_ACCOUNT_ID,
       to_account_id: constants.DEFAULT_TO_ACCOUNT_ID,
     },

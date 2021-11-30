@@ -18,6 +18,7 @@ function* loginUserSaga(data) {
 }
 
 function* logoutSaga() {
+  localStorage.removeItem('userToken');
   yield put({ type: types.USER_LOG_OUT_SUCCESS });
 }
 

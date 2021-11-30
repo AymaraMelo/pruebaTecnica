@@ -9,7 +9,6 @@ export default function TransactionForm({ handleSubmit }) {
   const [show, setShow] = useState(false);
 
   const [selectedAccount, setSelectedAccount] = useState(null);
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [references, setReferences] = useState('');
   const dispatchRedux = useDispatch();
 
@@ -152,7 +151,7 @@ export default function TransactionForm({ handleSubmit }) {
           style={{
             textAlign: 'center',
             width: '15%',
-            marginTop: '3%',
+            marginTop: '2%',
             marginBottom: '0%',
           }}
           variant="primary"

@@ -9,6 +9,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.response.use(
   (response) => {
+    console.log(response);
     return { status: 'OK', result: response.data };
   },
   (error) => {
