@@ -5,14 +5,24 @@ import TransactionForm from '../components/TransactionForm';
 import ConfirmForm from '../components/ConfirmForm';
 import { createTransaction } from '../redux/transactions/transactionsActions';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 export default function NewTransaction() {
   const [showComprobante, setShowComprobante] = useState(true);
   const [defaultActive, setDefaultActive] = useState('Ingreso de datos');
-  const dispatch = useDispatch();
   const loading = useSelector((state) => state.transactionsReducer.loading);
   const error = useSelector((state) => state.transactionsReducer.error);
   const createdTransaction = useSelector((state) => state.transactionsReducer.createdTransaction);
+  const userLoggedIn = useSelector((state) => state.authReducer.userLoggedIn);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userLoggedIn) {
+      navigate('/', { replace: true });
+    }
+  }, [userLoggedIn]);
 
   const handleSubmit = (newTransaction) => {
     setShowComprobante(false);
@@ -20,8 +30,6 @@ export default function NewTransaction() {
     const userToken = localStorage.getItem('userToken');
     dispatch(createTransaction(userToken, newTransaction));
   };
-
-  useEffect(() => {});
 
   return (
     <>
