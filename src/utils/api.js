@@ -1,3 +1,10 @@
 export function parseParams(object) {
-  return `from=${object.from}&to=2021-11-30T16:00:00.000Z&from_account_id=${object.from_account_id}&to_account_id=${object.to_account_id}&page=${object.pageIndex}&page_size=${object.pageSize}&sort_by=${object.sort_by}&order_by=${object.order_by}`;
+  const result = Object.entries(object).reduce((accum, current) => {
+    const accumulator = accum;
+    if (current[1]) {
+      accum.push(`${current[0]}=${current[1]}`);
+    }
+    return accumulator;
+  }, []);
+  return result.join('&');
 }

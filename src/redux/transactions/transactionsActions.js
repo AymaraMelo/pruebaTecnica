@@ -6,7 +6,7 @@ export const createTransaction = (userToken, transaction) => ({
   transaction,
 });
 
-export const getTransactions = (userToken, params) => ({
+export const getTransactions = (userToken, params, showLoader) => ({
   type: types.USER_GET_TRANSACTION_REQUEST,
   userToken,
   params,

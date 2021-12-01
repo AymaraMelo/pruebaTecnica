@@ -21,24 +21,17 @@ export default function Home() {
   };
   return (
     <>
-      <Row
+      <Button
+        onClick={handleNewTransaction}
         style={{
-          paddingRight: '10%',
-          paddingLeft: '10%',
-          marginTop: '5%',
-          alignContent: 'flex-end',
+          marginLeft: '7rem',
+          marginTop: '2%',
         }}
+        variant="primary"
       >
-        {/*Link */}
-        <Button
-          onClick={handleNewTransaction}
-          style={{ width: '20%', alignContent: 'flex-end' }}
-          variant="primary"
-        >
-          Nueva Transferencia
-        </Button>
-      </Row>
-      <Container style={{ paddingRight: '3%', paddingLeft: '3%', marginTop: '5%' }}>
+        Nueva Transferencia
+      </Button>
+      <Container style={{ paddingRight: '3%', paddingLeft: '3%', marginTop: '3%' }}>
         <TransactionTable />
       </Container>
     </>
