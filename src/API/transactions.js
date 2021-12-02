@@ -11,6 +11,16 @@ export async function getTransactions(userToken, params) {
   });
 }
 
+export async function getQuotes(userToken) {
+  return await axiosClient({
+    method: 'GET',
+    url: `transactions/rates`,
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    },
+  });
+}
+
 export async function setTransaction(userToken, data) {
   const headers = { Authorization: `Bearer ${userToken}` };
   return await axiosClient.post('/transactions', data, { headers });

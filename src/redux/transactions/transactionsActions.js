@@ -6,6 +6,11 @@ export const createTransaction = (userToken, transaction) => ({
   transaction,
 });
 
+export const getQuotes = (userToken) => ({
+  type: types.GET_QUOTES_REQUEST,
+  userToken,
+});
+
 export const getTransactions = (userToken, params, showLoader) => ({
   type: types.USER_GET_TRANSACTION_REQUEST,
   userToken,

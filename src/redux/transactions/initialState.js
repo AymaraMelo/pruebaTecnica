@@ -12,4 +12,5 @@ export default {
     totalRows: 0,
     totalPages: 0,
   },
+  quotes: null,
 };

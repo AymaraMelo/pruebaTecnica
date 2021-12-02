@@ -26,6 +26,15 @@ export default function transactionsReducer(state = initialState, action) {
       };
     case types.USER_GET_TRANSACTION_FAILURE:
       return { ...state, loading: false, error: action.error };
+    case types.GET_QUOTES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        quotes: action.quotes,
+      };
+    case types.GET_QUOTES_FAILURE:
+      return { ...state, loading: false, error: action.error };
     default:
       return state;
   }

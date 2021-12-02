@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router';
 import TransactionTable from '../components/TransactionsTable';
 import { useSelector } from 'react-redux';
+import InfoButton from '../components/InfoButton';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -21,17 +22,20 @@ export default function Home() {
   };
   return (
     <>
-      <Button
-        onClick={handleNewTransaction}
-        style={{
-          marginLeft: '7rem',
-          marginTop: '2%',
-        }}
-        variant="primary"
-      >
-        Nueva Transferencia
-      </Button>
-      <Container style={{ paddingRight: '3%', paddingLeft: '3%', marginTop: '3%' }}>
+      <Container>
+        <Button
+          onClick={handleNewTransaction}
+          style={{
+            marginLeft: '0rem',
+            marginTop: '2%',
+          }}
+          variant="primary"
+        >
+          Nueva Transferencia
+        </Button>
+      </Container>
+      <Container style={{ marginTop: '3%' }}>
+        <InfoButton></InfoButton>
         <TransactionTable />
       </Container>
     </>
